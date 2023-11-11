@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <sys/mman.h>
-
 #include "my_malloc_manager.h"
 
 // Declaraciones de variables globales

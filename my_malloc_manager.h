@@ -1,3 +1,13 @@
+// Standard includes
+#include <errno.h>  // for errno
+// #include <error.h>  // for error handling of system calls: man 3 error
+#include <stddef.h> // for size_t
+#include <stdio.h>  // for I/O functions
+#include <stdlib.h> // for EXIT_FAILURE
+#include <string.h> // for string manipulation functions
+#include <stdint.h>
+#include <sys/mman.h>
+
 #ifndef MY_MALLOC_MANAGER_H
 #define MY_MALLOC_MANAGER_H
 
@@ -10,6 +20,7 @@ typedef unsigned char *Bitmap;
 // Declaraciones de estructuras
 typedef struct MemoryChunkHeader {
     uint16_t id;                    // id of the chunk, useful for debugging
+    void *addr;                  // Address of the chunk
     uint16_t is_large_allocation;   // Flag to indicate if this is for a single large allocation
     uint16_t chunk_total_units;     // Size of the memory block in units
     uint16_t chunk_available_units; // How many units are available
