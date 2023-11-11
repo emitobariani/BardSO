@@ -78,7 +78,8 @@ void set_or_clear_bits(int set, Bitmap bitmap, uint16_t start_byte_index, uint16
     void *mem = mmap(NULL, total_units_to_mmap * UNIT_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem == MAP_FAILED) {
-        error(EXIT_FAILURE, errno, "Memory mapping failed");
+        print("Error")
+        //error(EXIT_FAILURE, errno, "Memory mapping failed");
     }
 
 
