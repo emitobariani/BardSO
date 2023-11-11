@@ -5,6 +5,8 @@
 void *my_malloc(size_t nbytes);
 void my_free(void *ptr);
 
+typedef unsigned char *Bitmap;
+
 // Declaraciones de estructuras
 typedef struct MemoryChunkHeader {
     uint16_t id;                    // id of the chunk, useful for debugging
@@ -25,5 +27,10 @@ typedef struct AllocationHeader {
 #define BITMAP_SIZE (uint16_t)16 // in bytes
 #define UNIT_SIZE (uint16_t)16   // minimum unit to assign, in bytes
 #define UNITS_PER_CHUNK (uint16_t)(BITMAP_SIZE * 8)
+#define STRUCT_SIZE (uint16_t)((sizeof(MemoryChunkHeader) + UNIT_SIZE - 1)/UNIT_SIZE)
+#define BITMAP_UNITS (uint16_t)((BITMAP_SIZE + UNIT_SIZE - 1)/UNIT_SIZE)
+#define IS_LARGE_ALLOCATION (units) (units >= (UNITS_PER_CHUNK - STRUCT_SIZE - BITMAP_UNITS))
+#define MAX_MALLOC_SIZE (size_t)16 * 1024 * 1024 // 16 MB
+
 
 #endif
