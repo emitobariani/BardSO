@@ -50,4 +50,3 @@ void *create_new_chunk(uint16_t units_needed, int is_large_allocation, MemoryChu
     return mem;
 }
 
-// Implementación de otras funciones auxiliares
