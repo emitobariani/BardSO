@@ -19,8 +19,7 @@ typedef unsigned char *Bitmap;
 
 // Declaraciones de estructuras
 typedef struct MemoryChunkHeader {
-    uint16_t id;                    // id of the chunk, useful for debugging
-    void *addr;                  // Address of the chunk
+    uint16_t id;                    // id of the chunk, useful for debugging                  // Address of the chunk
     uint16_t is_large_allocation;   // Flag to indicate if this is for a single large allocation
     uint16_t chunk_total_units;     // Size of the memory block in units
     uint16_t chunk_available_units; // How many units are available
