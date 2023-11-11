@@ -63,9 +63,9 @@ void set_or_clear_bits(int set, Bitmap bitmap, uint16_t start_byte_index, uint16
 // Implementación de la función create_new_chunk
     void *create_new_chunk(uint16_t units_needed, int is_large_allocation, MemoryChunkHeader *next) {
     // Calcula el total de unidades para mmap
-    uint16_t total_units_to_mmap = is_large_allocation ? units_needed + STRUCT_SIZE : UNITS_PER_CHUNK;
     MemoryChunkHeader *new_chunk = NULL;
-    uint16_t used_units = is_large_allocation ? STRUCT_SIZE : STRUCT_SIZE + BITMAP_UNITS;
+    uint16_t total_units_to_mmap = is_large_allocation ? units_needed + STRUCT_UNITS : UNITS_PER_CHUNK; 
+    uint16_t used_units = is_large_allocation ? STRUCT_UNITS : STRUCT_UNITS + BITMAP_UNITS;
     // Reserva memoria con mmap
     void *mem = mmap(NULL, total_units_to_mmap * UNIT_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
@@ -92,8 +92,6 @@ void set_or_clear_bits(int set, Bitmap bitmap, uint16_t start_byte_index, uint16
             u_int16_t bit_index = i % 8;
             new_chunk->bitmap[byte_index]  |= (1 << (7 - bit_index));
         }
-        // Marca como usadas las unidades que ocupa el header
-        set_or_clear_bits(1, new_chunk->bitmap, 0, 0, STRUCT_SIZE);
     }
 
     return new_chunk;

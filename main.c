@@ -29,7 +29,7 @@ int main() {
             int set;
             printf("Enter 1 to set or 0 to clear: ");
             scanf("%d", &set);
-            set_or_clear_bits(set, header->bitmap, start_byte_index * 8 + start_bit_index, qty);
+            set_or_clear_bits(set, header->bitmap, start_byte_index, start_bit_index, qty);
         } else {
             int index = first_fit(header->bitmap, BITMAP_SIZE, action);
             if (index != -1) {

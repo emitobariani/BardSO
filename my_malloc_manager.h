@@ -1,12 +1,12 @@
 // Standard includes
 #include <errno.h>  // for errno
-// #include <error.h>  // for error handling of system calls: man 3 error
+#include <error.h>  // for error handling of system calls: man 3 error
 #include <stddef.h> // for size_t
 #include <stdio.h>  // for I/O functions
 #include <stdlib.h> // for EXIT_FAILURE
 #include <string.h> // for string manipulation functions
 #include <stdint.h>
-#include <sys/mman.h>
+#include <sys/mman.h> // for mmap
 
 #ifndef MY_MALLOC_MANAGER_H
 #define MY_MALLOC_MANAGER_H
@@ -19,6 +19,7 @@ typedef unsigned char *Bitmap;
 
 // Declaraciones de estructuras
 typedef struct MemoryChunkHeader {
+    void *address;                  // Address of the chunk
     uint16_t id;                    // id of the chunk, useful for debugging                  // Address of the chunk
     uint16_t is_large_allocation;   // Flag to indicate if this is for a single large allocation
     uint16_t chunk_total_units;     // Size of the memory block in units
@@ -37,9 +38,9 @@ typedef struct AllocationHeader {
 #define BITMAP_SIZE 16 // in bytes
 #define UNIT_SIZE (uint16_t)16   // minimum unit to assign, in bytes
 #define UNITS_PER_CHUNK (BITMAP_SIZE * 8)
-#define STRUCT_SIZE (uint16_t)((sizeof(MemoryChunkHeader) + UNIT_SIZE - 1)/UNIT_SIZE)
+#define STRUCT_UNITS (uint16_t)((sizeof(MemoryChunkHeader) + UNIT_SIZE - 1)/UNIT_SIZE)
 #define BITMAP_UNITS (uint16_t)((BITMAP_SIZE + UNIT_SIZE - 1)/UNIT_SIZE)
-#define IS_LARGE_ALLOCATION (units) (units >= (UNITS_PER_CHUNK - STRUCT_SIZE - BITMAP_UNITS))
+#define IS_LARGE_ALLOCATION (units) (units >= (UNITS_PER_CHUNK - STRUCT_UNITS - BITMAP_UNITS))
 #define MAX_MALLOC_SIZE (size_t)16 * 1024 * 1024 // 16 MB
 
 int first_fit(unsigned char *bitmap, size_t bitmap_size, size_t units_needed);
