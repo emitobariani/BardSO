@@ -15,28 +15,33 @@ void *my_malloc(size_t nbytes) {
         return NULL; // No se permite asignar memoria de tamaño 0
     }
 
-    size_t units_needed = (nbytes + sizeof(AllocationHeader) - 1) / sizeof(AllocationHeader) + 1;
+    uint16_t units_needed = (nbytes + sizeof(AllocationHeader) + UNIT_SIZE - 1) / UNIT_SIZE;
+    
+    MemoryChunkHeader *header = (MemoryChunkHeader*) create_new_chunk(UNITS_PER_CHUNK, 0,NULL);
 
-    MemoryChunkHeader *chunk = find_or_create_chunk(units_needed);
-
-    if (chunk) {
-        for (int i = 0; i < chunk->chunk_total_units; i++) {
-            if ((i + units_needed) > chunk->chunk_total_units) {
-                continue;
+    if(first_chunk == NULL) {
+        my_malloc_init();
+    }
+    //large location, create new chunk
+    if (is_large_allocation) {
+        chunk = create_new_chunk(units_needed, 1, first_chunk->next);
+        bit_index = STRUCT_SIZE;
+    } else {
+        //small location, find chunk
+        chunk = first_chunk;
+        while (chunk != NULL) {
+            bit_index = bitmap_find_space(chunk->bitmap, units_needed);
+            if (bit_index != -1) {
+                break;
             }
-
-            if (bitmap_find_free_space(chunk->bitmap, i, units_needed)) {
-                AllocationHeader *header = (AllocationHeader *)((char *)chunk + sizeof(MemoryChunkHeader) + (i * sizeof(AllocationHeader)));
-                header->nunits = units_needed;
-                header->bit_index = i;
-
-                chunk->chunk_available_units -= units_needed;
-                return (void *)(header + 1);
-            }
+            chunk = chunk->next;
+        }
+        //no chunk found, create new chunk
+        if (chunk == NULL) {
+            chunk = create_new_chunk(units_needed, 0, first_chunk);
+            bit_index = 0;
         }
     }
-
-    return NULL;
 }
 
 

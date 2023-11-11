@@ -24,13 +24,17 @@ typedef struct AllocationHeader {
 } AllocationHeader;
 
 // Declaraciones de constantes
-#define BITMAP_SIZE (uint16_t)16 // in bytes
+#define BITMAP_SIZE 16 // in bytes
 #define UNIT_SIZE (uint16_t)16   // minimum unit to assign, in bytes
-#define UNITS_PER_CHUNK (uint16_t)(BITMAP_SIZE * 8)
+#define UNITS_PER_CHUNK (BITMAP_SIZE * 8)
 #define STRUCT_SIZE (uint16_t)((sizeof(MemoryChunkHeader) + UNIT_SIZE - 1)/UNIT_SIZE)
 #define BITMAP_UNITS (uint16_t)((BITMAP_SIZE + UNIT_SIZE - 1)/UNIT_SIZE)
 #define IS_LARGE_ALLOCATION (units) (units >= (UNITS_PER_CHUNK - STRUCT_SIZE - BITMAP_UNITS))
 #define MAX_MALLOC_SIZE (size_t)16 * 1024 * 1024 // 16 MB
 
+int first_fit(unsigned char *bitmap, size_t bitmap_size, size_t units_needed);
+void print_bitmap(unsigned char *bitmap, size_t bitmap_size);
+void set_or_clear_bits(int set, Bitmap bitmap, uint16_t start_byte_index, uint16_t start_bit_index, uint16_t qty);
+void* create_new_chunk(uint16_t units_needed, int is_large_allocation, MemoryChunkHeader *next);
 
 #endif
